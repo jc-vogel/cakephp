@@ -79,14 +79,14 @@ abstract class IntegrationTestCase extends TestCase
     protected $_controller;
 
     /**
-     * The last rendered view
+     * The first rendered view in the last request
      *
      * @var string
      */
     protected $_viewName;
 
     /**
-     * The last rendered layout
+     * The first rendered layout in the last request
      *
      * @var string
      */
@@ -307,10 +307,14 @@ abstract class IntegrationTestCase extends TestCase
         $this->_controller = $event->data['controller'];
         $events = $this->_controller->eventManager();
         $events->on('View.beforeRender', function ($event, $viewFile) {
-            $this->_viewName = $viewFile;
+            if (!$this->_viewName) {
+                $this->_viewName = $viewFile;
+            }
         });
         $events->on('View.beforeLayout', function ($event, $viewFile) {
-            $this->_layoutName = $viewFile;
+            if (!$this->_layoutName) {
+                $this->_layoutName = $viewFile;
+            }
         });
     }
 
